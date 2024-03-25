@@ -1,0 +1,56 @@
+import time
+import pygame
+import os
+
+def display_timer(duration):
+    start_time = time.time()
+    while True:
+        elapsed_time = time.time() - start_time
+        remaining_time = duration - elapsed_time
+        if remaining_time <= 0:
+            break
+        print(f"Time remaining: {int(remaining_time)} seconds", end='\r')
+        time.sleep(1)
+    print("\nTimer ended. Playing video.")
+
+def play_video(video_file):
+    try:
+        pygame.init()
+        pygame.mixer.init()
+        screen = pygame.display.set_mode((640, 480))
+        pygame.display.set_caption("Video Player")
+        clock = pygame.time.Clock()
+        
+        # Check if the file exists
+        if not os.path.exists(video_file):
+            raise FileNotFoundError("Video file not found.")
+
+        _, ext = os.path.splitext(video_file)
+        if ext.lower() not in ('.mp4', '.avi', '.mpeg', '.mov'):
+            raise ValueError("Unsupported video format.")
+
+        pygame.mixer.music.load(video_file)
+        pygame.mixer.music.play()
+
+        while pygame:
+            clock.tick(30)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    return
+
+    except pygame.error as e:
+        print("Error: Couldn't play the video.")
+        print(e)
+    except FileNotFoundError as e:
+        print("Error:", e)
+    except ValueError as e:
+        print("Error:", e)
+    finally:
+        pygame.quit()
+
+if __name__ == "__main__":
+    timer_duration = 10 
+    video_file = r"C:\Users\miral\Videos\Topo Screensaver.mp4" #bro put ur video file here 
+    display_timer(timer_duration)
+    play_video(video_file)
